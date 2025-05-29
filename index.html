@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interior Design Psychology Assessment</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #a8e6cf 0%, #7fcdcd 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #2c3e50;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #7fcdcd, #a8e6cf);
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .logo {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            color: #7fcdcd;
+            font-size: 14px;
+        }
+        
+        .header h1 {
+            color: white;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .header p {
+            color: white;
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .quiz-content {
+            padding: 40px;
+        }
+        
+        .question-container {
+            display: none;
+        }
+        
+        .question-container.active {
+            display: block;
+        }
+        
+        .question {
+            margin-bottom: 30px;
+        }
+        
+        .question h3 {
+            font-size: 1.4em;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            line-height: 1.5;
+        }
+        
+        .answers {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .answer {
+            padding: 20px;
+            background: #f8f9fa;
+            border: 2px solid transparent;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1em;
+            line-height: 1.4;
+        }
+        
+        .answer:hover {
+            background: #e8f5e8;
+            border-color: #a8e6cf;
+        }
+        
+        .answer.selected {
+            background: #7fcdcd;
+            color: white;
+            border-color: #5fb3b3;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        
+        .btn-primary {
+            background: #7fcdcd;
+            color: white;
+        }
+        
+        .btn-primary:hover:not(:disabled) {
+            background: #5fb3b3;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: #95a5a6;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #7f8c8d;
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #ecf0f1;
+            border-radius: 3px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #7fcdcd, #a8e6cf);
+            border-radius: 3px;
+            transition: width 0.3s ease;
+            width: 20%;
+        }
+        
+        .results {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .results.show {
+            display: block;
+        }
+        
+        .score-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin: 20px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5em;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .results h2 {
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+        
+        .results p {
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            color: #34495e;
+        }
+        
+        .contact-section {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 30px;
+            margin-top: 30px;
+            border-radius: 15px;
+            text-align: center;
+        }
+        
+        .contact-btn {
+            background: linear-gradient(135deg, #7fcdcd, #a8e6cf);
+            color: white;
+            padding: 15px 35px;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.2em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 20px;
+        }
+        
+        .contact-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(127, 205, 205, 0.3);
+        }
+        
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .quiz-content {
+                padding: 20px;
+            }
+            
+            .logo {
+                position: static;
+                margin-bottom: 20px;
+                display: inline-block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">Empathic Minds</div>
+            <h1>Interior Design Psychology Assessment</h1>
+            <p>Discover the deeper psychological layers of your design approach</p>
+        </div>
+        
+        <div class="quiz-content">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            
+            <!-- Question 1 -->
+            <div class="question-container active" id="question1">
+                <div class="question">
+                    <h3>A client says their newly renovated home feels "beautiful but somehow empty" despite having all the furniture and decor they wanted. What's your first instinct about what might be missing?</h3>
+                    <div class="answers">
+                        <div class="answer" data-value="1">They need more personal items, family photos, and mementos to make it feel lived-in</div>
+                        <div class="answer" data-value="2">The color scheme or lighting might not be reflecting their personality properly</div>
+                        <div class="answer" data-value="3">The space lacks connection to their deeper sense of identity and life story</div>
+                        <div class="answer" data-value="4">The design doesn't reflect their unconscious needs and archetypal patterns of living</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Question 2 -->
+            <div class="question-container" id="question2">
+                <div class="question">
+                    <h3>When designing a bedroom, what do you consider most important for creating a truly restorative space?</h3>
+                    <div class="answers">
+                        <div class="answer" data-value="1">Good mattress, blackout curtains, and optimal temperature control</div>
+                        <div class="answer" data-value="2">Calming colors, soft textures, and minimal clutter for relaxation</div>
+                        <div class="answer" data-value="3">Elements that support the person's relationship with sleep, dreams, and inner reflection</div>
+                        <div class="answer" data-value="4">A design that honors the archetypal sanctuary and connects to their deep psyche</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Question 3 -->
+            <div class="question-container" id="question3">
+                <div class="question">
+                    <h3>A client feels inexplicably anxious in their kitchen despite it being functionally perfect. How would you approach understanding this?</h3>
+                    <div class="answers">
+                        <div class="answer" data-value="1">Check if the layout creates good workflow and if there are any safety concerns</div>
+                        <div class="answer" data-value="2">Look at lighting, colors, and whether the space feels too cramped or exposed</div>
+                        <div class="answer" data-value="3">Explore their relationship with nourishment, family gathering, and the hearth archetype</div>
+                        <div class="answer" data-value="4">Investigate how the space relates to their unconscious associations with nurturing and transformation</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Question 4 -->
+            <div class="question-container" id="question4">
+                <div class="question">
+                    <h3>When a couple can't agree on design choices for their shared space, what's usually the deeper issue at play?</h3>
+                    <div class="answers">
+                        <div class="answer" data-value="1">Different practical needs and lifestyle preferences that need to be balanced</div>
+                        <div class="answer" data-value="2">Conflicting aesthetic tastes that require creative compromise solutions</div>
+                        <div class="answer" data-value="3">Different ways of expressing identity and feeling at home in the world</div>
+                        <div class="answer" data-value="4">Unconscious archetypal patterns and shadow projections playing out through design choices</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Question 5 -->
+            <div class="question-container" id="question5">
+                <div class="question">
+                    <h3>What do you believe is the most transformative aspect of interior design work?</h3>
+                    <div class="answers">
+                        <div class="answer" data-value="1">Creating functional, beautiful spaces that improve daily life and increase property value</div>
+                        <div class="answer" data-value="2">Helping people express their personal style and feel more comfortable in their environment</div>
+                        <div class="answer" data-value="3">Supporting people's psychological well-being through thoughtful environmental design</div>
+                        <div class="answer" data-value="4">Facilitating deep personal transformation by aligning outer spaces with inner archetypal patterns</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="navigation">
+                <button class="btn btn-secondary" id="prevBtn" onclick="previousQuestion()" style="display: none;">Previous</button>
+                <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" disabled>Next</button>
+            </div>
+            
+            <div class="results" id="results">
+                <div class="score-circle" id="scoreCircle">
+                    <span id="scoreText">0%</span>
+                </div>
+                <h2 id="resultTitle">Your Design Psychology Assessment</h2>
+                <p id="resultDescription"></p>
+                
+                <div class="contact-section">
+                    <h3>Ready to Deepen Your Design Practice?</h3>
+                    <p>Discover how Jungian depth psychology and archetypal patterns can transform your approach to interior design.</p>
+                    <p>Learn to create spaces that resonate with the deeper layers of human psychology and facilitate genuine transformation.</p>
+                    <a href="https://www.udemy.com/course/depth-psychology-interior-design/?referralCode=FAFD716011399B701C40" target="_blank" class="contact-btn">Explore the Course</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentQuestion = 1;
+        const totalQuestions = 5;
+        let answers = {};
+
+        function selectAnswer(element, questionNum, value) {
+            // Remove selected class from all answers in this question
+            const questionAnswers = document.querySelectorAll(`#question${questionNum} .answer`);
+            questionAnswers.forEach(answer => answer.classList.remove('selected'));
+            
+            // Add selected class to clicked answer
+            element.classList.add('selected');
+            
+            // Store the answer
+            answers[questionNum] = value;
+            
+            // Enable next button
+            document.getElementById('nextBtn').disabled = false;
+        }
+
+        function nextQuestion() {
+            if (currentQuestion < totalQuestions) {
+                // Hide current question
+                document.getElementById(`question${currentQuestion}`).classList.remove('active');
+                
+                // Show next question
+                currentQuestion++;
+                document.getElementById(`question${currentQuestion}`).classList.add('active');
+                
+                // Update progress bar
+                const progress = (currentQuestion / totalQuestions) * 100;
+                document.getElementById('progressFill').style.width = progress + '%';
+                
+                // Update buttons
+                document.getElementById('prevBtn').style.display = 'inline-block';
+                document.getElementById('nextBtn').disabled = !answers[currentQuestion];
+                
+                if (currentQuestion === totalQuestions) {
+                    document.getElementById('nextBtn').textContent = 'See Results';
+                }
+            } else {
+                showResults();
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestion > 1) {
+                // Hide current question
+                document.getElementById(`question${currentQuestion}`).classList.remove('active');
+                
+                // Show previous question
+                currentQuestion--;
+                document.getElementById(`question${currentQuestion}`).classList.add('active');
+                
+                // Update progress bar
+                const progress = (currentQuestion / totalQuestions) * 100;
+                document.getElementById('progressFill').style.width = progress + '%';
+                
+                // Update buttons
+                if (currentQuestion === 1) {
+                    document.getElementById('prevBtn').style.display = 'none';
+                }
+                document.getElementById('nextBtn').disabled = false;
+                document.getElementById('nextBtn').textContent = 'Next';
+            }
+        }
+
+        function showResults() {
+            // Hide all question containers
+            for (let i = 1; i <= totalQuestions; i++) {
+                document.getElementById(`question${i}`).style.display = 'none';
+            }
+            
+            // Hide navigation
+            document.querySelector('.navigation').style.display = 'none';
+            
+            // Hide progress bar
+            document.querySelector('.progress-bar').style.display = 'none';
+            
+            // Calculate score (4 points max per question, total 20 points)
+            const totalScore = Object.values(answers).reduce((sum, value) => sum + value, 0);
+            const percentage = Math.round((totalScore / 20) * 100);
+            
+            // Show results
+            const resultsDiv = document.getElementById('results');
+            const scoreCircle = document.getElementById('scoreCircle');
+            const scoreText = document.getElementById('scoreText');
+            const resultTitle = document.getElementById('resultTitle');
+            const resultDescription = document.getElementById('resultDescription');
+            
+            scoreText.textContent = percentage + '%';
+            
+            // Set result based on score (made challenging to encourage course enrollment)
+            if (percentage >= 85) {
+                scoreCircle.style.background = 'linear-gradient(135deg, #27ae60, #2ecc71)';
+                resultTitle.textContent = 'Advanced Depth Design Awareness';
+                resultDescription.innerHTML = 'You have strong intuition about the deeper psychological dimensions of design. You understand that spaces affect us on unconscious levels and are ready to learn the specific archetypal frameworks that can make your work truly transformative.';
+            } else if (percentage >= 65) {
+                scoreCircle.style.background = 'linear-gradient(135deg, #f39c12, #e67e22)';
+                resultTitle.textContent = 'Developing Psychological Design Sense';
+                resultDescription.innerHTML = 'You recognize that design goes beyond aesthetics and functionality, but you\'re missing key insights about how archetypal patterns and depth psychology can revolutionize your approach. Learning these frameworks could unlock a completely new dimension in your work.';
+            } else {
+                scoreCircle.style.background = 'linear-gradient(135deg, #e74c3c, #c0392b)';
+                resultTitle.textContent = 'Surface-Level Design Approach';
+                resultDescription.innerHTML = 'Your current approach focuses primarily on the practical and aesthetic aspects of design. You\'re missing the profound psychological dimensions that create truly transformative spaces. Understanding Jungian principles and archetypal patterns could completely revolutionize your design practice.';
+            }
+            
+            resultsDiv.style.display = 'block';
+            resultsDiv.classList.add('show');
+        }
+
+        // Add event listeners for answer selection
+        document.addEventListener('DOMContentLoaded', function() {
+            for (let q = 1; q <= totalQuestions; q++) {
+                const answers = document.querySelectorAll(`#question${q} .answer`);
+                answers.forEach((answer, index) => {
+                    answer.addEventListener('click', function() {
+                        selectAnswer(this, q, parseInt(this.dataset.value));
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>
